@@ -23,24 +23,30 @@
 *   10            8                     SDA/SS
 *   9             15                    RST
 *   8             -                     To LED
+*   7             -                     Servo Control
 *   3             -                     SDA/SS 2
 *   2             -                     RST 2
 */
 
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Servo.h>
 
 #define RST_PIN         9          // Configurable, see typical pin layout above
 #define SS_PIN          10          // Configurable, see typical pin layout above
 #define RST2_PIN        2
 #define SS2_PIN         3
 #define LED_PIN         4
+#define SERVO_PIN       7
 
 bool board1ok = 0;
 bool board2ok = 0;
+bool unlock = 0;
+int pos = 0;
 
 MFRC522 board1(SS_PIN, RST_PIN);  // Create MFRC522 instance
 MFRC522 board2(SS2_PIN, RST2_PIN);
+Servo myServo;
 
 void setup() {
   pinMode(LED_PIN, OUTPUT);
@@ -52,6 +58,8 @@ void setup() {
   board2.PCD_Init();
   board1.PCD_DumpVersionToSerial();  // Show details of PCD - MFRC522 Card Reader details
   board2.PCD_DumpVersionToSerial();
+  myServo.attach(SERVO_PIN);
+  myServo.write(10);
   Serial.println(F("Waft a card near the reader!"));
 }
 
@@ -69,6 +77,8 @@ void loop() {
   if (board1ok && board2ok) {
     Serial.println(F("Unlocked!"));
     digitalWrite(LED_PIN, HIGH);
+    unlock = 1;
+    open_door();
   } else {
     digitalWrite(LED_PIN, LOW);
   }
@@ -76,4 +86,12 @@ void loop() {
   board2ok = 0;
   delay(100);
   
+}
+
+void open_door() {
+  for (pos = 0; pos <= 120; pos +=1) {
+    myServo.write(pos);
+    delay(5);
+    return;
+  }
 }
