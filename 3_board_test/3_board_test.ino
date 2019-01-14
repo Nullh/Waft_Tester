@@ -52,6 +52,9 @@ MFRC522 board3(SS3_PIN, RST3_PIN);
 void setup() {
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
+  digitalWrite(RST1_PIN, HIGH);
+  digitalWrite(RST2_PIN, HIGH);
+  digitalWrite(RST3_PIN, HIGH);
   Serial.begin(9600);   // Initialize serial communications with the PC
   while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
   SPI.begin();      // Init SPI bus
@@ -65,21 +68,29 @@ void setup() {
 }
 
 void loop() {
+  digitalWrite(RST1_PIN, LOW);
   if (board1.PICC_IsNewCardPresent()) {
     Serial.println(F("Card 1 OK"));
     board1.PICC_HaltA();
     board1ok = 1;
   }
+  digitalWrite(RST1_PIN, HIGH);
+  delay(100);
+  digitalWrite(RST2_PIN, LOW);
   if (board2.PICC_IsNewCardPresent()) {
     Serial.println(F("Card 2 OK"));
     board2.PICC_HaltA();
     board2ok = 1;
   }
+  digitalWrite(RST2_PIN, HIGH);
+  delay(100);
+  digitalWrite(RST3_PIN, LOW);
   if (board3.PICC_IsNewCardPresent()) {
     Serial.println(F("Card 3 OK"));
     board3.PICC_HaltA();
     board3ok = 1;
   }
+  digitalWrite(RST3_PIN, HIGH);
   if (board1ok && board2ok && board3ok) {
     Serial.println(F("Unlocked!"));
     digitalWrite(LED_PIN, HIGH);
