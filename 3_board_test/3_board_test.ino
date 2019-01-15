@@ -69,6 +69,7 @@ void setup() {
   pinMode(RST2_PIN, OUTPUT);
   pinMode(RST3_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
+<<<<<<< HEAD
   digitalWrite(OK_1, LOW);
   digitalWrite(OK_2, LOW);
   digitalWrite(OK_3, LOW);
