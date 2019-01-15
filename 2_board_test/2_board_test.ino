@@ -41,8 +41,9 @@
 
 bool board1ok = 0;
 bool board2ok = 0;
-bool unlock = 0;
-int pos = 0;
+bool opened = 0;
+bool unlocked = 0;
+int pos = 10;
 
 MFRC522 board1(SS_PIN, RST_PIN);  // Create MFRC522 instance
 MFRC522 board2(SS2_PIN, RST2_PIN);
@@ -59,6 +60,7 @@ void setup() {
   board1.PCD_DumpVersionToSerial();  // Show details of PCD - MFRC522 Card Reader details
   board2.PCD_DumpVersionToSerial();
   myServo.attach(SERVO_PIN);
+  open_door();
   myServo.write(10);
   Serial.println(F("Waft a card near the reader!"));
 }
@@ -77,10 +79,14 @@ void loop() {
   if (board1ok && board2ok) {
     Serial.println(F("Unlocked!"));
     digitalWrite(LED_PIN, HIGH);
-    unlock = 1;
-    open_door();
+    unlocked = 1;
   } else {
     digitalWrite(LED_PIN, LOW);
+  }
+
+  if (unlocked && !opened) {
+    open_door();
+    opened = 1;
   }
   board1ok = 0;
   board2ok = 0;
@@ -92,6 +98,5 @@ void open_door() {
   for (pos = 0; pos <= 120; pos +=1) {
     myServo.write(pos);
     delay(5);
-    return;
   }
 }

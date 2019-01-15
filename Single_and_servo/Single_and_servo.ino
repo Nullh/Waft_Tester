@@ -29,9 +29,9 @@
 #include <MFRC522.h>
 #include <Servo.h>
 
-#define RST_PIN         2//9          // Configurable, see typical pin layout above
-#define SS_PIN          3//10          // Configurable, see typical pin layout above
-#define LED_PIN         8
+#define RST_PIN         9          // Configurable, see typical pin layout above
+#define SS_PIN          10          // Configurable, see typical pin layout above
+#define LED_PIN         4
 #define SERVO_PIN       7
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);  // Create MFRC522 instance
